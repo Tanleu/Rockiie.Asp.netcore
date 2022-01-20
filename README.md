@@ -1,6 +1,6 @@
 # Rockiie.Asp.netcore
 Practice homework
 
-#Fundermential
+# Fundermential
 Middleware
 Dependency injection
