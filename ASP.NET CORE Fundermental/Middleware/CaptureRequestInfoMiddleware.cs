@@ -50,6 +50,13 @@ namespace Second_Lesson_ASP.Core_MVC.Middleware
         public async Task InvokeAsync(HttpContext context)
         {
             requestCapture1.CaptureThenDoAction(context.Request);
+            await _next(context);
+        }
+        
+        public void Invoke(HttpContext context)
+        {
+            requestCapture1.CaptureThenDoAction(context.Request);
+            _next(context);
         }
 
     }

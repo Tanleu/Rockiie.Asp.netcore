@@ -21,6 +21,8 @@ app.UseRouting();
 
 app.UseAuthorization();
 
+app.UseCaptureRequest();
+
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
@@ -28,7 +30,5 @@ app.MapControllerRoute(
 app.MapControllerRoute(
     name: "main",
     pattern: "main/{controller=Home}/{action=Index}/{id?}");
-
-app.UseCaptureRequest();
 
 app.Run();

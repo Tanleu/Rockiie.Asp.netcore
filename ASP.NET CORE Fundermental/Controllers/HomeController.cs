@@ -13,7 +13,6 @@ public class HomeController : Controller
         _logger = logger;
     }
 
-    [Route("hihi/hehe/haha?a=1&b=2&c=3")]
     public IActionResult Index()
     {
         return View();
