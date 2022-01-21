@@ -8,6 +8,7 @@ namespace Second_Lesson_ASP.Core_MVC.Middleware
 {
     /// <summary>
     /// Add the Capture middleware to pipeline user request
+    ///
     /// </summary>
     public static class CaptureRequestInfoMiddlewareExtension
     {
@@ -33,7 +34,7 @@ namespace Second_Lesson_ASP.Core_MVC.Middleware
         // public CaptureRequestInfoMiddleware(IRequestCapture requestCapture)
         // {
         //     requestCapture1 = requestCapture;
-        // } exclude this contructor because we have CaptureRequestInfoMiddleware
+        // } exclude this contructor because we have another contructor CaptureRequestInfoMiddleware
         public void Capture(HttpRequest httpRequest)
         {
             requestCapture1.CaptureThenDoAction(httpRequest);
@@ -76,11 +77,16 @@ namespace Second_Lesson_ASP.Core_MVC.Middleware
             captureRequestModel.Host = request.Host.ToString();
             captureRequestModel.Path = request.Path.ToString();
             captureRequestModel.Querystring
-                = request.QueryString.ToString() ==  "" ? null : request.QueryString.ToString()
-                    .Split('&')
-                    .Select(x => new QueryStringModel() { Key = x.PadLeft(x.IndexOf('=')), Value = x.PadRight(x.Length - x.IndexOf('=')) })
-                    .ToList();
-            captureRequestModel.RequestBody = request.Body.ToString();//new StreamReader(request.Body).ReadToEnd();//request.Body.ToString();
+                = request.QueryString.ToString() ==  "" ? 
+                    new List<QueryStringModel>() : // Are there any better way to return an empty list?(Issue: if return null, a warning is rasied)
+                    request.QueryString.ToString()
+                        .Split('&')
+                        .Select(x => new QueryStringModel() 
+                                        {   Key = x.PadLeft(x.IndexOf('=')), 
+                                            Value = x.PadRight(x.Length - x.IndexOf('=')) 
+                                        })
+                        .ToList();
+            captureRequestModel.RequestBody = request.Body.ToString() ?? "";//new StreamReader(request.Body).ReadToEnd();//request.Body.ToString();
 
             hist.CaptureRequests.Add(captureRequestModel);
 
