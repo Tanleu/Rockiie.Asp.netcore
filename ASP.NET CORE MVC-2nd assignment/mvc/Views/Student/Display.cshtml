@@ -1,0 +1,45 @@
+@model StudentModel
+
+@{
+    if(Model is null)
+        ViewData["Title"] = "Add new Student";
+    else
+        ViewData["Title"] = "Edit student";
+}
+<h1 class="display-4">@ViewData["Title"]</h1>
+<div class="d-flex flex-column">
+    <div>
+        <div>Last Name</div>
+        <div>@Model.LastName</div>
+    </div>
+    
+    <div>
+        <div>First Name</div>
+        <div>@Model.FirstName</div>
+    </div>
+
+    <div>
+        <div>Gender</div>
+        <div>@Model.Gender</div>
+    </div>
+
+    <div>
+        <div>Date Of Birth</div>
+        <div>@Model.DateOfBirth</div>
+    </div>
+
+    <div>
+        <div>Phone Number</div>
+        <div>@Model.PhoneNumber</div>
+    </div>
+
+    <div>
+        <div>Birth Place</div>
+        <div>@Model.BirthPlace</div>
+    </div>
+
+    <div>
+        <div>Graduated</div>
+        <div>@Model.IsGraduated</div>
+    </div>
+</div>

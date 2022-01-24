@@ -1,0 +1,55 @@
+@model List<StudentModel>
+
+@{
+    ViewData["Title"] = "Page of Student";
+}
+<h1 class="display-4">@ViewData["Title"]</h1>
+<ul>
+    <li><a asp-action="ListOfMaleMember">Show list male member</a></li>
+    <li><a asp-action="OldestStudent">Get oldest student</a></li>
+    <li><a asp-action="ListOfStudentWithFullNameOnly">Get list of student with full name only</a></li>
+    <ul>
+        <li><a asp-action="ListOfStudentBasedOnAge" asp-route-comparableOperator = "=" asp-route-comparableAge = "2000">Student whose age = 2000</a></li>
+        <li><a asp-action="ListOfStudentBasedOnAge" asp-route-comparableOperator = "<" asp-route-comparableAge = "2000">Student whose age < 2000</a></li>
+        <li><a asp-action="ListOfStudentBasedOnAge" asp-route-comparableOperator = ">" asp-route-comparableAge = "2000">Student whose age > 2000</a></li>
+    </ul>
+    <li><a asp-action="GetDummyDataIntoExcelFile">Download data to excel file</a></li>
+
+</ul>
+<button>Add a new student</button>
+<div>
+    <table class="table ">
+        <thead class="thead-light">
+            <tr>
+                <th scope="col">Last Name</th>
+                <th scope="col">First Name</th>
+                <th scope="col">Gender</th>
+                <th scope="col">Date of Birth</th>
+                <th scope="col">Phone Number</th>
+                <th scope="col">Birth Place</th>
+                <th scope="col">Graduated status</th>
+                <th scope="col">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var student in Model)
+            {
+                <tr>
+                    <td>@student.LastName</td>
+                    <td>@student.FirstName</td>
+                    <td>@student.Gender</td>
+                    <td>@student.DateOfBirth.ToString("dd/MM/yyyy")</td>
+                    <td>@student.PhoneNumber</td>
+                    <td>@student.BirthPlace</td>
+                    <td>@student.GetGraduatedStringFormat()</td>
+                    <td>
+                        <div>
+                            <button asp-action="UpdateStudent" asp-route-id="@student.Id">Edit</button>
+                            <button asp-action="DeleteStudent" asp-route-id="@student.Id" >Delete</button>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
