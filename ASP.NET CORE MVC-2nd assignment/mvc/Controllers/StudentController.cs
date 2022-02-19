@@ -4,26 +4,75 @@ using mvc.Enum;
 using mvc.Models;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
+using mvc.ViewModels.StudentViewModel;
+using mvc.Interfaces;
 
 namespace mvc.Controllers
 {
-    public class StudentController: Controller
+    public class StudentController : Controller
     {
+        //Dependency injection contructor
+        private IStudentService _studentService;
+        public StudentController(IStudentService studentService)
+        {
+            _studentService = studentService;
+            listStudent = _studentService.List();
+        }
+        private List<StudentModel> listStudent;
         /// <summary>
         /// Main page.
         /// </summary>
         /// <returns></returns>
-        private List<StudentModel> listStudent = StudentDataContext.GetDataContextInstance().studentModel; 
         public IActionResult Index()
         {
-            return View(listStudent);
+            // string aString = HttpContext.Session.GetString("DeletedStudent");
+            return _studentService.Index();
+        }
+        //For showing page CRUD
+        public IActionResult Create()
+        {
+            StudentViewModel studentViewModel = new StudentViewModel();
+            studentViewModel.Student = new StudentModel();
+            return View("Display", studentViewModel);
+        }
+        public IActionResult Update(int id)
+        {
+            StudentModel student = listStudent.FirstOrDefault(x => x.Id == id) ?? new StudentModel();
+            StudentViewModel studentViewModel = new StudentViewModel();
+            studentViewModel.Student = student;
+            ViewData["Message"] = "";
+            return View("Display", studentViewModel);
+        }
+        public IActionResult Delete(int id)
+        {
+            var student = listStudent.FirstOrDefault(x => x.Id == id);
+            return View("Delete", student);
         }
 
+        //For actual action CRUD
+        [HttpPost]
+        public IActionResult UpdateStudent(StudentModel student)
+        {
+            return _studentService.CreateOrUpdate(student);
+        }
+        [HttpPost]
+        public IActionResult DeleteStudent(int id)
+        {
+            return _studentService.Delete(id);
+        }
+    }
+
+    public class StudentExtensionController : Controller
+    {
+        private List<StudentModel> listStudent; 
+        public StudentExtensionController(IStudentService studentService)
+        {
+            listStudent = studentService.List();
+        }
         public IActionResult ListOfMaleMember()
         {
-            return View("Index", listStudent.Where(x=> x.Gender == Enum.Gender.Male).ToList());
+            return View("Views/Student/Index.cshtml", listStudent.Where(x => x.Gender == Enum.Gender.Male).ToList());
         }
-
         public IActionResult OldestStudent()
         {
             var oldestStudent = new List<StudentModel>()
@@ -31,26 +80,21 @@ namespace mvc.Controllers
                 listStudent.OrderByDescending(x => x.DateOfBirth.Subtract(DateTime.Now)).FirstOrDefault(),
             };
 
-            return View("Index", oldestStudent);
+            return View("Views/Student/Index.cshtml", oldestStudent);
         }
-
         public IActionResult ListOfStudentWithFullNameOnly()
         {
-            return View("Index", listStudent);
+            return View("Views/Student/Index.cshtml", listStudent);
         }
-
-        public IActionResult ListOfStudentBasedOnAge(string comparableOperator,int comparableAge)
+        public IActionResult ListOfStudentBasedOnAge(string comparableOperator, int comparableAge)
         {
             List<StudentModel> filteredStudentsByAge = new List<StudentModel>();
-            if(comparableOperator == "=") filteredStudentsByAge = listStudent.Where(x=> x.DateOfBirth.Year == comparableAge).ToList();
-            else if(comparableOperator == "<") filteredStudentsByAge = listStudent.Where(x=> x.DateOfBirth.Year < comparableAge).ToList();
-            else filteredStudentsByAge = listStudent.Where(x=> x.DateOfBirth.Year > comparableAge).ToList();
+            if (comparableOperator == "=") filteredStudentsByAge = listStudent.Where(x => x.DateOfBirth.Year == comparableAge).ToList();
+            else if (comparableOperator == "<") filteredStudentsByAge = listStudent.Where(x => x.DateOfBirth.Year < comparableAge).ToList();
+            else filteredStudentsByAge = listStudent.Where(x => x.DateOfBirth.Year > comparableAge).ToList();
 
-            return View("Index", filteredStudentsByAge);
+            return View("Views/Student/Index.cshtml", filteredStudentsByAge);
         }
-        
-
-        /// <summary>
         /// Using DOTNET.CORE NPOI
         /// </summary>
         /// <returns></returns>
@@ -73,7 +117,8 @@ namespace mvc.Controllers
             headerRow.CreateCell(6).SetCellValue("Is Graduated");
 
             int i = 1;
-            listStudent.ForEach(x => {
+            listStudent.ForEach(x =>
+            {
                 IRow detailRow = sheet1.CreateRow(i);
                 detailRow.CreateCell(0).SetCellValue(x.LastName);
                 detailRow.CreateCell(1).SetCellValue(x.FirstName);
@@ -88,29 +133,5 @@ namespace mvc.Controllers
             var downloadedExcelFile = System.IO.File.ReadAllBytes("./ListOfAllStudent.xlsx");
             return File(downloadedExcelFile, "application/vnd.ms-excel", "ListOfAllStudent.xlsx");
         }
-
-        public IActionResult CreateStudent()
-        {
-            return View("Display");
-        }
-
-        public IActionResult UpdateStudent(int studentId)
-        {
-            StudentModel student = StudentDataContext.GetDataContextInstance()
-                                                    .studentModel.Where(x=> x.Id == studentId).FirstOrDefault();
-            Console.Write(student.LastName);
-            return View("Display", student);
-        }
-
-        public IActionResult DeleteStudent()
-        {
-
-            return View();
-        }
-
-        // public IActionResult DisplayDetailStudentInfo(StudentModel student)
-        // {
-        //     return View();    
-        // }
     }
 }

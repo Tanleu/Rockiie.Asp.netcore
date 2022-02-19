@@ -1,9 +1,8 @@
 using mvc.Enum;
-using mvc.Interfaces;
 
 namespace mvc.Models
 {
-    public class StudentModel
+    public class PersonModel
     {
         public int Id { get; set; }
         public string FirstName { get; set; }
@@ -13,9 +12,5 @@ namespace mvc.Models
         public string PhoneNumber { get; set; }
         public string BirthPlace { get; set; }
         public bool IsGraduated { get; set; }
-
-        public string GetGraduatedStringFormat() => IsGraduated ? "Graduated" : "Non-Graduated";
-        public string GetFullName() => $"{FirstName}  {LastName}";
     }
-
 }

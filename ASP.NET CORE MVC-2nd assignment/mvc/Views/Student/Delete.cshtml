@@ -1,0 +1,14 @@
+@model StudentModel
+
+<div>
+    <a href="/Student">Back to list</a>
+    <p class="alert alert-warning">Are you sure to delete this student??</p>
+</div>
+<div>
+    <form asp-action="DeleteStudent">
+        <input type="hidden" asp-for="Id" />
+        <div class="form-group">
+            <input type="submit" value="Yes" class="btn btn-danger" />
+        </div>
+    </form>
+</div>

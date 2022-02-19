@@ -1,45 +1,77 @@
-@model StudentModel
+@model mvc.ViewModels.StudentViewModel.StudentViewModel
 
 @{
-    if(Model is null)
+    if(Model.Student.Id == -1)
         ViewData["Title"] = "Add new Student";
     else
         ViewData["Title"] = "Edit student";
 }
 <h1 class="display-4">@ViewData["Title"]</h1>
-<div class="d-flex flex-column">
-    <div>
-        <div>Last Name</div>
-        <div>@Model.LastName</div>
-    </div>
-    
-    <div>
-        <div>First Name</div>
-        <div>@Model.FirstName</div>
-    </div>
 
-    <div>
-        <div>Gender</div>
-        <div>@Model.Gender</div>
-    </div>
+@{
+    if(ViewData["Message"] != "")    
+    {
+        <div class="alert alert-success">@ViewData["Message"]</div>
+        <a href="/Student">Come back to list</a>
+    }
+}
 
-    <div>
-        <div>Date Of Birth</div>
-        <div>@Model.DateOfBirth</div>
-    </div>
+<div class="col-md-10">
+    <form asp-action="UpdateStudent">
+        <input type="hidden" asp-for="Student.Id" />
+        <div class="form-group row">
+            <label asp-for="Student.LastName" class="control-label col-sm-2"></label>
+            <div class="col-sm-10">
+                <input asp-for="Student.LastName" class="form-control"/>
+            </div>
+        </div>
+        
+        <div class="form-group row">
+            <label asp-for="Student.FirstName" class="control-label col-sm-2"></label>
+            <div class="col-sm-10">
+                <input asp-for="Student.FirstName" class="form-control"/>
+            </div>
+        </div>
 
-    <div>
-        <div>Phone Number</div>
-        <div>@Model.PhoneNumber</div>
-    </div>
+        <div class="form-group row">
+            <label asp-for="Student.Gender" class="control-label col-sm-2"></label>
+            <div class="col-sm-10">
+                <select asp-for="Student.Gender" asp-items="Model.Genders" class="form-control"></select>
+            </div>
+        </div>
 
-    <div>
-        <div>Birth Place</div>
-        <div>@Model.BirthPlace</div>
-    </div>
+        <div class="form-group row">
+            <label asp-for="Student.DateOfBirth" class="control-label col-sm-2"></label>
+            <div class="col-sm-10">
+                <input asp-for="Student.DateOfBirth" class="form-control"/>
+            </div>
+        </div>
 
-    <div>
-        <div>Graduated</div>
-        <div>@Model.IsGraduated</div>
-    </div>
+        <div class="form-group row">
+            <label asp-for="Student.PhoneNumber" class="control-label col-sm-2"></label>
+            <div class="col-sm-10">
+                <input asp-for="Student.PhoneNumber" class="form-control"/>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label asp-for="Student.BirthPlace" class="control-label col-sm-2"></label>
+            <div class="col-sm-10">
+                <input asp-for="Student.BirthPlace" class="form-control"/>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label asp-for="Student.IsGraduated" class="control-label col-sm-2"></label>
+            <div class="col-sm-10">
+                <select asp-for="Student.IsGraduated" asp-items="Model.GraduatedOptions" class="form-control"></select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <input type="submit" value="Save" class="btn btn-primary" />
+        </div>
+
+
+    </form>
 </div>
